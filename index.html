@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PRC63 CRM</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="PRC63 CRM"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0a0710">
+<style>
+:root{--bg:#0a0710;--card:#140f1f;--line:#2a2040;--p:#8a2be2;--gold:#d4a24c;--tx:#f3eefb;--mu:#a99cc2;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a0710}}
+:root[data-theme="dark"]{--bg:#0a0710}
+*{box-sizing:border-box;margin:0}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--bg);color:var(--tx);font:15px/1.45 "Segoe UI",Roboto,Arial,sans-serif;min-height:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:rgba(10,7,16,.96);z-index:10}
+.w{max-width:900px;margin:0 auto;padding:0 16px}
+header{position:sticky;top:env(safe-area-inset-top,0px);background:rgba(10,7,16,.96);border-bottom:1px solid var(--line);z-index:9}
+header .top{display:flex;justify-content:space-between;align-items:center;height:56px}
+.lg{font-weight:800;font-style:italic;font-size:20px;background:linear-gradient(90deg,#a855f7,#6d28d9);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lg span{color:var(--gold);-webkit-text-fill-color:var(--gold);font-style:normal;font-size:14px}
+.tabs{display:flex;gap:6px;padding-bottom:10px;overflow-x:auto}
+button,select,input,textarea{font:inherit;color:var(--tx)}
+button{cursor:pointer;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 14px}
+.tabs button.on,.chips button.on{border-color:var(--p);background:rgba(138,43,226,.25)}
+.b{background:linear-gradient(135deg,#8a2be2,#5b21b6);border:0;font-weight:600}
+.st{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+.st div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+.st b{display:block;font-size:20px;color:var(--gold)}.st span{color:var(--mu);font-size:12px}
+input,select,textarea{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--p)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}.chips button{padding:6px 12px;font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:10px;display:grid;gap:6px}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.card a{color:var(--gold)}.mu{color:var(--mu);font-size:13px}
+.pill{font-size:12px;padding:3px 10px;border-radius:20px;border:1px solid var(--line)}
+.s-new{color:#93c5fd;border-color:#3b82f6}.s-work{color:#fbbf24;border-color:#d97706}.s-ready{color:#86efac;border-color:#16a34a}.s-done{color:var(--mu)}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}.acts select{width:auto}
+.acts button{padding:6px 12px;font-size:13px}
+.due{border-color:#ef4444}
+.car{display:inline-block;margin:2px 4px 2px 0;padding:2px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px}
+.hist{border-top:1px solid var(--line);padding-top:8px;display:grid;gap:6px;font-size:14px}
+.empty{color:var(--mu);text-align:center;padding:36px 0}
+dialog{background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:14px;width:92%;max-width:460px;padding:18px;margin:auto}
+dialog::backdrop{background:rgba(0,0,0,.75)}
+dialog form{display:grid;gap:10px}.two,#nc{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:grid;gap:4px;color:var(--mu);font-size:13px}small{color:var(--mu)}
+footer{padding:26px 0 40px;text-align:center}footer small{display:block;margin-top:8px}
+.lg{display:flex;align-items:center;gap:8px}
+.hg{width:26px;height:26px;animation:rot 6s linear infinite}.lg:hover .hg{animation-duration:.8s}
+@keyframes rot{to{transform:rotate(360deg)}}
+header::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:linear-gradient(90deg,transparent,#a855f7,#d4a24c,transparent);background-size:200% 100%;animation:sw 3s linear infinite}
+@keyframes sw{to{background-position:-200% 0}}
+header .b{animation:pl 2.4s infinite}
+@keyframes pl{0%{box-shadow:0 0 0 0 rgba(138,43,226,.6)}70%,100%{box-shadow:0 0 0 12px rgba(138,43,226,0)}}
+.bgg{position:fixed;pointer-events:none;z-index:-1;opacity:.1}.bgg svg{width:100%;height:auto;animation:rot 40s linear infinite}
+.bgg circle{fill:none;stroke:#a855f7}.b1{right:-70px;bottom:-70px;width:280px}.b2{left:-40px;bottom:90px;width:130px}.b2 svg{animation-direction:reverse;animation-duration:25s}
+.card{transition:transform .2s,box-shadow .2s,border-color .2s}.card:hover{border-color:var(--p);transform:translateY(-2px);box-shadow:0 8px 24px rgba(138,43,226,.25)}
+.an .card{animation:in .4s both}@keyframes in{from{opacity:0;transform:translateY(12px)}}
+.pill::before{display:inline-block;margin-right:5px}.s-new::before{content:"✦"}.s-ready::before{content:"✔"}.s-done::before{content:"✓"}
+.s-work::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;animation:bl 1s ease-in-out infinite;vertical-align:middle}@keyframes bl{50%{opacity:.2}}
+.wr{font-size:42px;display:inline-block;animation:wg 1.6s ease-in-out infinite}@keyframes wg{0%,100%{transform:rotate(-20deg)}50%{transform:rotate(20deg)}}
+@media(prefers-reduced-motion:reduce){.hg,header::after,header .b,.bgg svg,.an .card,.s-work::before,.wr,.bar i{animation:none}}
+#ts{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:#1d1430;border:1px solid var(--p);padding:10px 18px;border-radius:20px;opacity:0;pointer-events:none;transition:.25s;z-index:30}#ts.on{opacity:1;transform:translate(-50%,0)}
+.card a.lnk{padding:6px 12px;font-size:13px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--tx);text-decoration:none}
+.bar{display:grid;grid-template-columns:64px 1fr auto;gap:8px;align-items:center;font-size:13px}.bar i{display:block;height:10px;border-radius:6px;background:linear-gradient(90deg,#8a2be2,#d4a24c);min-width:2px;animation:gw .8s ease-out both}@keyframes gw{from{width:0}}
+.bi{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;margin-top:6px}.bi button{padding:2px 10px}.ck{display:flex;gap:8px;align-items:center;color:var(--tx);font-size:14px}.ck input{width:auto}.dn{text-decoration:line-through;color:var(--mu)}
+</style>
+</head>
+<body>
+<header><div class="w"><div class="top"><div class="lg"><svg class="hg" viewBox="-14 -14 28 28" aria-hidden="true"><circle r="10" fill="none" stroke="#a855f7" stroke-width="4" stroke-dasharray="3.9 3.9"/><circle r="8" fill="none" stroke="#a855f7" stroke-width="2"/><circle r="2.5" fill="#d4a24c"/></svg>PRC63 <span>CRM</span></div><button class="b" onclick="orderForm()">+ Заказ</button></div><div class="tabs" id="tabs"></div></div></header>
+<main class="w" id="v"></main>
+<div class="bgg b1" aria-hidden="true"><svg viewBox="-50 -50 100 100"><circle r="40" stroke-width="9" stroke-dasharray="10.47 10.47"/><circle r="35" stroke-width="3"/><circle r="12" stroke-width="3"/></svg></div>
+<div class="bgg b2" aria-hidden="true"><svg viewBox="-50 -50 100 100"><circle r="40" stroke-width="9" stroke-dasharray="15.7 15.7"/><circle r="35" stroke-width="3"/><circle r="12" stroke-width="3"/></svg></div>
+<div id="ts"></div>
+<dialog id="dlg"></dialog>
+<script>
+var K='prc63crm',D={clients:[],orders:[]},tab='orders',flt='all',q='',open={};
+try{var r=JSON.parse(localStorage.getItem(K));if(r&&r.clients&&r.orders)D=r}catch(e){}
+function save(){try{localStorage.setItem(K,JSON.stringify(D))}catch(e){}}
+var $=function(s){return document.querySelector(s)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function td(){return new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10)}
+function money(n){return (+n||0).toLocaleString('ru-RU')+' ₽'}
+function fd(d){return d?d.split('-').reverse().join('.'):''}
+var ST={new:'Новый',work:'В работе',ready:'Готов',done:'Выдан'};
+function cl(id){return D.clients.find(function(c){return c.id===id})||{name:'—',phone:'',cars:[]}}
+function tel(p){return p?'<a href="tel:'+esc(p.replace(/[^+\d]/g,''))+'">'+esc(p)+'</a>':''}
+
+function render(){
+ var m=td().slice(0,7),t=td();
+ var act=D.orders.filter(function(o){return o.status==='new'||o.status==='work'}).length;
+ var rev=D.orders.filter(function(o){return o.status==='done'&&o.date.indexOf(m)===0}).reduce(function(s,o){return s+(+o.cost||0)},0);
+ var due=D.orders.filter(function(o){return o.remind&&o.remind<=t}).length;
+ $('#tabs').innerHTML=[['orders','Заказы'],['clients','Клиенты'],['rem','Напоминания'+(due?' ('+due+')':'')],['buy','Закупки'+(buyN()?' ('+buyN()+')':'')],['rep','Отчёт']].map(function(x){return '<button class="'+(tab===x[0]?'on':'')+'" onclick="tab=\''+x[0]+'\';render()">'+x[1]+'</button>'}).join('');
+ var chips=tab==='orders'?'<div class="chips">'+[['all','Все']].concat(Object.entries(ST)).map(function(x){return '<button class="'+(flt===x[0]?'on':'')+'" onclick="flt=\''+x[0]+'\';render()">'+x[1]+'</button>'}).join('')+'</div>':'';
+ var search=tab==='rem'||tab==='rep'||tab==='buy'?'':'<input id="qs" placeholder="Поиск: имя, телефон, номер авто, работа" value="'+esc(q)+'" oninput="q=this.value;lst()">';
+ $('#v').innerHTML='<div class="st"><div><b>'+act+'</b><span>в работе</span></div><div><b>'+money(rev)+'</b><span>выручка за месяц</span></div><div><b>'+due+'</b><span>напомнить</span></div></div>'+search+chips+'<div id="lst"></div><footer><button onclick="backup()">Резервная копия</button><small>Данные хранятся в этом браузере. Делайте резервную копию.</small></footer>';
+ lst();$('#lst').classList.add('an');
+}
+function lst(){$('#lst').classList.remove('an');$('#lst').innerHTML=tab==='orders'?vOrders():tab==='clients'?vClients():tab==='rep'?vRep():tab==='buy'?vBuy():vRem()}
+function hay(o){var c=cl(o.cid);return [c.name,c.phone,o.plate,o.model,o.work].join(' ').toLowerCase()}
+
+function vOrders(){
+ var a=D.orders.filter(function(o){return (flt==='all'||o.status===flt)&&hay(o).indexOf(q.toLowerCase())>-1}).sort(function(a,b){return b.date.localeCompare(a.date)});
+ if(!a.length)return '<div class="empty"><div class="wr">🔧</div><br>Заказов пока нет. Нажмите «+ Заказ».</div>';
+ return a.map(function(o){var c=cl(o.cid);
+  return '<div class="card"><div class="row"><b>'+esc(o.plate||'без номера')+' · '+esc(o.model)+'</b><span class="pill s-'+o.status+'">'+ST[o.status]+'</span></div><div>'+esc(c.name)+' '+tel(c.phone)+'</div><div>'+esc(o.work)+'</div>'+buyHtml(o)+'<div class="row"><b>'+money(o.cost)+'</b><span class="mu">'+fd(o.date)+'</span></div>'
+  +'<div class="acts"><select onchange="setSt(\''+o.id+'\',this.value)">'+Object.entries(ST).map(function(x){return '<option value="'+x[0]+'"'+(x[0]===o.status?' selected':'')+'>'+x[1]+'</option>'}).join('')+'</select><button onclick="orderForm(\''+o.id+'\')">Изменить</button><button onclick="delOrder(\''+o.id+'\')">Удалить</button></div></div>'}).join('');
+}
+function vClients(){
+ var a=D.clients.filter(function(c){return (c.name+' '+c.phone+' '+c.cars.map(function(x){return x.plate+' '+x.model}).join(' ')).toLowerCase().indexOf(q.toLowerCase())>-1}).sort(function(a,b){return a.name.localeCompare(b.name)});
+ var h='<div class="acts" style="margin-top:10px"><button onclick="clientForm()">+ Клиент</button></div>';
+ if(!a.length)return h+'<div class="empty"><div class="wr">🔧</div><br>Клиентов пока нет.</div>';
+ return h+a.map(function(c){var os=D.orders.filter(function(o){return o.cid===c.id}).sort(function(a,b){return b.date.localeCompare(a.date)});var sum=os.reduce(function(s,o){return s+(+o.cost||0)},0);
+  return '<div class="card"><div class="row"><b>'+esc(c.name)+'</b><span class="mu">'+os.length+' зак. · '+money(sum)+'</span></div><div>'+tel(c.phone)+'</div>'+(c.note?'<div class="mu">'+esc(c.note)+'</div>':'')+'<div>'+c.cars.map(function(x){return '<span class="car">'+esc(x.plate)+' '+esc(x.model)+'</span>'}).join('')+'</div>'
+  +'<div class="acts"><button onclick="open[\''+c.id+'\']=!open[\''+c.id+'\'];lst()">История</button><button onclick="orderForm(\'\',\''+c.id+'\')">+ Заказ</button><button onclick="clientForm(\''+c.id+'\')">Изменить</button></div>'
+  +(open[c.id]?'<div class="hist">'+(os.map(function(o){return '<div>'+fd(o.date)+' · '+esc(o.plate)+' · '+esc(o.work)+' · <b>'+money(o.cost)+'</b> <span class="pill s-'+o.status+'">'+ST[o.status]+'</span></div>'}).join('')||'<span class="mu">Заказов нет</span>')+'</div>':'')+'</div>'}).join('');
+}
+function vRem(){
+ var a=D.orders.filter(function(o){return o.remind}).sort(function(a,b){return a.remind.localeCompare(b.remind)});
+ if(!a.length)return '<div class="empty"><div class="wr">🔧</div><br>Напоминаний нет. Их можно добавить в заказе.</div>';
+ return a.map(function(o){var c=cl(o.cid),late=o.remind<=td();
+  return '<div class="card'+(late?' due':'')+'"><div class="row"><b>'+esc(c.name)+'</b><span class="'+(late?'':'mu')+'">'+fd(o.remind)+(late?' · пора':'')+'</span></div><div>'+tel(c.phone)+' · '+esc(o.plate)+' '+esc(o.model)+'</div><div class="mu">'+esc(o.rtext||'Напомнить про обслуживание')+'</div><div class="acts"><button onclick="cpTxt(\''+o.id+'\')">Копировать текст</button><button onclick="remDone(\''+o.id+'\')">Готово</button></div></div>'}).join('');
+}
+function setSt(id,v){D.orders.find(function(o){return o.id===id}).status=v;save();render()}
+function delOrder(id){if(confirm('Удалить заказ?')){D.orders=D.orders.filter(function(o){return o.id!==id});save();render()}}
+function remDone(id){var o=D.orders.find(function(o){return o.id===id});o.remind='';o.rtext='';save();render()}
+function cpTxt(id){var o=D.orders.find(function(o){return o.id===id}),c=cl(o.cid);var t='Здравствуйте, '+c.name+'! Это автосервис PRC63. '+(o.rtext||'Напоминаем про обслуживание вашего автомобиля')+' ('+o.model+'). Запишем вас?';try{navigator.clipboard.writeText(t)}catch(e){prompt('Скопируйте текст:',t)}}
+
+function orderForm(id,cid0){
+ var o=D.orders.find(function(x){return x.id===id})||{cid:cid0||'',plate:'',model:'',work:'',cost:'',status:'new',date:td(),remind:'',rtext:''};
+ var cs=D.clients.slice().sort(function(a,b){return a.name.localeCompare(b.name)});
+ $('#dlg').innerHTML='<form onsubmit="return false"><h3>'+(id?'Заказ':'Новый заказ')+'</h3><label>Клиент<select id="f_c" onchange="cChg()"><option value="">+ Новый клиент</option>'+cs.map(function(c){return '<option value="'+c.id+'"'+(c.id===o.cid?' selected':'')+'>'+esc(c.name)+'</option>'}).join('')+'</select></label>'
+ +'<div id="nc"><input id="f_n" placeholder="Имя клиента"><input id="f_p" type="tel" placeholder="Телефон"></div>'
+ +'<input id="f_pl" list="pl" placeholder="Госномер" value="'+esc(o.plate)+'" onchange="plChg()"><datalist id="pl"></datalist><input id="f_m" placeholder="Марка и модель" value="'+esc(o.model)+'">'
+ +'<textarea id="f_w" rows="3" placeholder="Что сделано или нужно сделать">'+esc(o.work)+'</textarea>'
+ +'<div class="two"><input id="f_k" type="number" min="0" placeholder="Стоимость, ₽" value="'+esc(o.cost)+'"><input id="f_d" type="date" value="'+o.date+'"></div>'
+ +'<select id="f_s">'+Object.entries(ST).map(function(x){return '<option value="'+x[0]+'"'+(x[0]===o.status?' selected':'')+'>'+x[1]+'</option>'}).join('')+'</select>'
+ +'<label>Что купить к заказу</label><div class="two" style="grid-template-columns:1fr 90px 44px"><input id="b_t" placeholder="Запчасть или расходник" onkeydown="if(event.keyCode==13)bAdd()"><input id="b_p" type="number" min="0" placeholder="₽"><button type="button" class="b" onclick="bAdd()">+</button></div><div id="bl"></div><div class="two"><input id="f_r" type="date" value="'+o.remind+'"><input id="f_rt" placeholder="О чём напомнить" value="'+esc(o.rtext)+'"></div><div class="chips"><button type="button" onclick="addRem(3)">+3 мес</button><button type="button" onclick="addRem(6)">+6 мес</button><button type="button" onclick="addRem(12)">+1 год</button></div><small>Напоминание клиенту: дата и текст, необязательно.</small><small id="er" style="color:#f87171"></small>'
+ +'<div class="acts"><button class="b" onclick="saveOrder(\''+(id||'')+'\')">Сохранить</button><button onclick="$(\'#dlg\').close()">Отмена</button></div></form>';
+ $('#dlg').showModal();cChg();window._buy=(o.buy||[]).map(function(x){return {t:x.t,p:x.p,d:x.d}});bRender();
+}
+function cChg(){var v=$('#f_c').value;$('#nc').style.display=v?'none':'grid';$('#pl').innerHTML=(cl(v).cars||[]).map(function(a){return '<option value="'+esc(a.plate)+'">'+esc(a.model)+'</option>'}).join('')}
+function plChg(){var c=cl($('#f_c').value),p=$('#f_pl').value.trim().toUpperCase(),a=(c.cars||[]).find(function(a){return a.plate===p});if(a&&!$('#f_m').value)$('#f_m').value=a.model}
+function saveOrder(id){
+ var cid=$('#f_c').value,pl=$('#f_pl').value.trim().toUpperCase(),md=$('#f_m').value.trim(),w=$('#f_w').value.trim(),n=$('#f_n').value.trim();
+ if(!cid&&!n)return err('Укажите клиента');
+ if(!w)return err('Опишите работу');
+ if(!cid){var nc={id:uid(),name:n,phone:$('#f_p').value.trim(),cars:[],note:''};D.clients.push(nc);cid=nc.id}
+ var c=cl(cid);if(pl&&!c.cars.some(function(a){return a.plate===pl}))c.cars.push({plate:pl,model:md});
+ bAdd();var o={id:id||uid(),cid:cid,plate:pl,model:md,work:w,cost:+$('#f_k').value||0,status:$('#f_s').value,date:$('#f_d').value||td(),remind:$('#f_r').value,rtext:$('#f_rt').value.trim(),buy:(window._buy||[]).slice()};
+ var i=D.orders.findIndex(function(x){return x.id===id});if(i>=0)D.orders[i]=o;else D.orders.push(o);
+ save();$('#dlg').close();render();
+}
+function clientForm(id){
+ var c=D.clients.find(function(x){return x.id===id})||{name:'',phone:'',note:''};
+ $('#dlg').innerHTML='<form onsubmit="return false"><h3>'+(id?'Клиент':'Новый клиент')+'</h3><input id="c_n" placeholder="Имя" value="'+esc(c.name)+'"><input id="c_p" type="tel" placeholder="Телефон" value="'+esc(c.phone)+'"><textarea id="c_t" rows="2" placeholder="Заметка">'+esc(c.note)+'</textarea><small id="er" style="color:#f87171"></small><div class="acts"><button class="b" onclick="saveClient(\''+(id||'')+'\')">Сохранить</button><button onclick="$(\'#dlg\').close()">Отмена</button>'+(id?'<button onclick="delClient(\''+id+'\')">Удалить</button>':'')+'</div></form>';
+ $('#dlg').showModal();
+}
+function saveClient(id){
+ var n=$('#c_n').value.trim();if(!n)return err('Укажите имя');
+ var c=D.clients.find(function(x){return x.id===id});if(!c){c={id:uid(),cars:[]};D.clients.push(c)}
+ c.name=n;c.phone=$('#c_p').value.trim();c.note=$('#c_t').value.trim();save();$('#dlg').close();render();
+}
+function delClient(id){
+ if(D.orders.some(function(o){return o.cid===id}))return alert('У клиента есть заказы. Сначала удалите их.');
+ if(confirm('Удалить клиента?')){D.clients=D.clients.filter(function(c){return c.id!==id});save();$('#dlg').close();render()}
+}
+function backup(){
+ $('#dlg').innerHTML='<form onsubmit="return false"><h3>Резервная копия</h3><small>Скопируйте этот текст и сохраните, например, в заметках или в Telegram себе. Чтобы восстановить данные, вставьте текст сюда и нажмите «Загрузить».</small><textarea id="bk" rows="8">'+esc(JSON.stringify(D))+'</textarea><small id="er" style="color:#f87171"></small><div class="acts"><button class="b" onclick="restore()">Загрузить</button><button onclick="$(\'#dlg\').close()">Закрыть</button></div></form>';
+ $('#dlg').showModal();
+}
+function restore(){
+ try{var r=JSON.parse($('#bk').value);if(!r.clients||!r.orders)throw 0;if(confirm('Заменить текущие данные загруженными?')){D=r;save();$('#dlg').close();render()}}catch(e){alert('Не удалось прочитать данные')}
+}
+function cls(){$('#dlg').close()}
+function askY(){var f=window._cb;cls();f()}
+function ask(t,cb){window._cb=cb;$('#dlg').innerHTML='<form onsubmit="return false"><h3>'+esc(t)+'</h3><div class="acts"><button type="button" class="b" onclick="askY()">Да</button><button type="button" onclick="cls()">Отмена</button></div></form>';if(!$('#dlg').open)$('#dlg').showModal()}
+function toast(m){var t=$('#ts');t.textContent=m;t.classList.add('on');clearTimeout(window._t);window._t=setTimeout(function(){t.classList.remove('on')},2200)}
+function err(m){var e=$('#er');if(e)e.textContent=m}
+function delOrder(id){ask('Удалить этот заказ?',function(){D.orders=D.orders.filter(function(o){return o.id!==id});save();render();toast('Заказ удалён')})}
+function delClient(id){if(D.orders.some(function(o){return o.cid===id}))return err('У клиента есть заказы. Сначала удалите их.');ask('Удалить клиента?',function(){D.clients=D.clients.filter(function(c){return c.id!==id});save();render();toast('Клиент удалён')})}
+function restore(){try{var r=JSON.parse($('#bk').value);if(!r.clients||!r.orders)throw 0;D=r;save();cls();render();toast('Данные загружены')}catch(e){err('Не удалось прочитать данные')}}
+function addRem(m){var d=new Date();d.setMonth(d.getMonth()+m);$('#f_r').value=new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)}
+function msg(o){var c=cl(o.cid);return 'Здравствуйте, '+c.name+'! Это автосервис PRC63. '+(o.rtext||'Напоминаем про обслуживание вашего автомобиля')+' ('+o.model+'). Запишем вас?'}
+function wa(o){var d=(cl(o.cid).phone||'').replace(/\D/g,'');if(d.length===11&&d[0]==='8')d='7'+d.slice(1);return 'https://wa.me/'+d+'?text='+encodeURIComponent(msg(o))}
+function selT(){$('#tt').select()}
+function showTxt(t){$('#dlg').innerHTML='<form onsubmit="return false"><h3>Текст сообщения</h3><textarea id="tt" rows="5" readonly>'+esc(t)+'</textarea><div class="acts"><button type="button" onclick="selT()">Выделить</button><button type="button" onclick="cls()">Закрыть</button></div></form>';$('#dlg').showModal();selT()}
+function cpTxt(id){var o=D.orders.find(function(o){return o.id===id}),t=msg(o);try{navigator.clipboard.writeText(t).then(function(){toast('Текст скопирован')},function(){showTxt(t)})}catch(e){showTxt(t)}}
+function vRep(){
+ var now=new Date(),ms=[];for(var i=5;i>=0;i--){var d=new Date(now.getFullYear(),now.getMonth()-i,1);ms.push(d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2))}
+ var vals=ms.map(function(m){return D.orders.filter(function(o){return o.status==='done'&&o.date.indexOf(m)===0}).reduce(function(s,o){return s+(+o.cost||0)},0)});
+ var mx=Math.max.apply(null,vals.concat([1])),dn=D.orders.filter(function(o){return o.status==='done'}),tot=dn.reduce(function(s,o){return s+(+o.cost||0)},0);
+ return '<div class="card"><b>Выручка по месяцам</b>'+ms.map(function(m,i){return '<div class="bar"><span>'+m.slice(5)+'.'+m.slice(0,4)+'</span><i style="width:'+Math.round(vals[i]/mx*100)+'%"></i><b>'+money(vals[i])+'</b></div>'}).join('')+'<span class="mu">Считаются заказы со статусом «Выдан».</span></div><div class="st" style="margin-top:10px"><div><b>'+D.orders.length+'</b><span>всего заказов</span></div><div><b>'+D.clients.length+'</b><span>клиентов</span></div><div><b>'+money(dn.length?Math.round(tot/dn.length):0)+'</b><span>средний чек</span></div></div>';
+}
+function buyN(){var n=0;D.orders.forEach(function(o){if(o.status!=='done')(o.buy||[]).forEach(function(x){if(!x.d)n++})});return n}
+function bRender(){var b=window._buy,e=$('#bl');if(e)e.innerHTML=b.map(function(x,i){return '<div class="bi"><label class="ck"><input type="checkbox"'+(x.d?' checked':'')+' onchange="bTg('+i+')"><span class="'+(x.d?'dn':'')+'">'+esc(x.t)+'</span></label><span class="mu">'+(x.p?money(x.p):'')+'</span><button type="button" onclick="bDel('+i+')">×</button></div>'}).join('')}
+function bAdd(){var t=$('#b_t');if(!t||!window._buy||!t.value.trim())return;window._buy.push({t:t.value.trim(),p:+$('#b_p').value||0,d:false});t.value='';$('#b_p').value='';bRender()}
+function bTg(i){window._buy[i].d=!window._buy[i].d;bRender()}
+function bDel(i){window._buy.splice(i,1);bRender()}
+function buyHtml(o){var b=o.buy||[];if(!b.length)return '';return '<div class="hist"><span class="mu">Купить:</span>'+b.map(function(x,i){return '<div class="bi"><label class="ck"><input type="checkbox" data-o="'+o.id+'" data-i="'+i+'"'+(x.d?' checked':'')+' onchange="tgB(this)"><span class="'+(x.d?'dn':'')+'">'+esc(x.t)+'</span></label><span class="mu">'+(x.p?money(x.p):'')+'</span></div>'}).join('')+'</div>'}
+function tgB(el){var o=D.orders.find(function(o){return o.id===el.dataset.o}),x=o.buy[+el.dataset.i];x.d=!x.d;save();render()}
+function vBuy(){
+ var rows=D.orders.filter(function(o){return o.status!=='done'&&(o.buy||[]).some(function(x){return !x.d})}),sum=0;
+ rows.forEach(function(o){o.buy.forEach(function(x){if(!x.d)sum+=+x.p||0})});
+ if(!rows.length)return '<div class="empty"><div class="wr">🔧</div><br>Покупать пока нечего. Добавьте запчасти в заказе.</div>';
+ return '<div class="card"><b>Купить на сумму: '+money(sum)+'</b><span class="mu">Отметьте галочкой, когда купили.</span></div>'+rows.map(function(o){return '<div class="card"><div class="row"><b>'+esc(o.plate||'без номера')+' · '+esc(o.model)+'</b><span class="mu">'+esc(cl(o.cid).name)+'</span></div>'+buyHtml(o)+'</div>'}).join('');
+}
+render();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});
+</script>
+</body>
+</html>
