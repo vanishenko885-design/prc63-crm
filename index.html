@@ -66,6 +66,7 @@ header .b{animation:pl 2.4s infinite}
 .card a.lnk{padding:6px 12px;font-size:13px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--tx);text-decoration:none}
 .bar{display:grid;grid-template-columns:64px 1fr auto;gap:8px;align-items:center;font-size:13px}.bar i{display:block;height:10px;border-radius:6px;background:linear-gradient(90deg,#8a2be2,#d4a24c);min-width:2px;animation:gw .8s ease-out both}@keyframes gw{from{width:0}}
 .bi{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;margin-top:6px}.bi button{padding:2px 10px}.ck{display:flex;gap:8px;align-items:center;color:var(--tx);font-size:14px}.ck input{width:auto}.dn{text-decoration:line-through;color:var(--mu)}
+.s-diag{color:#c4b5fd;border-color:#8b5cf6}.s-parts{color:#fdba74;border-color:#ea580c}.s-diag::before{content:"🔍"}.s-parts::before{content:"⏳"}
 </style>
 </head>
 <body>
@@ -85,13 +86,13 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 function td(){return new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10)}
 function money(n){return (+n||0).toLocaleString('ru-RU')+' ₽'}
 function fd(d){return d?d.split('-').reverse().join('.'):''}
-var ST={new:'Новый',work:'В работе',ready:'Готов',done:'Выдан'};
+var ST={new:'Принят',diag:'Диагностика',parts:'Ждём запчасти',work:'Ремонт',ready:'Готов',done:'Выдан'};
 function cl(id){return D.clients.find(function(c){return c.id===id})||{name:'—',phone:'',cars:[]}}
 function tel(p){return p?'<a href="tel:'+esc(p.replace(/[^+\d]/g,''))+'">'+esc(p)+'</a>':''}
 
 function render(){
  var m=td().slice(0,7),t=td();
- var act=D.orders.filter(function(o){return o.status==='new'||o.status==='work'}).length;
+ var act=D.orders.filter(function(o){return ['new','diag','parts','work'].indexOf(o.status)>-1}).length;
  var rev=D.orders.filter(function(o){return o.status==='done'&&o.date.indexOf(m)===0}).reduce(function(s,o){return s+(+o.cost||0)},0);
  var due=D.orders.filter(function(o){return o.remind&&o.remind<=t}).length;
  $('#tabs').innerHTML=[['orders','Заказы'],['clients','Клиенты'],['rem','Напоминания'+(due?' ('+due+')':'')],['buy','Закупки'+(buyN()?' ('+buyN()+')':'')],['rep','Отчёт']].map(function(x){return '<button class="'+(tab===x[0]?'on':'')+'" onclick="tab=\''+x[0]+'\';render()">'+x[1]+'</button>'}).join('');
@@ -108,7 +109,7 @@ function vOrders(){
  if(!a.length)return '<div class="empty"><div class="wr">🔧</div><br>Заказов пока нет. Нажмите «+ Заказ».</div>';
  return a.map(function(o){var c=cl(o.cid);
   return '<div class="card"><div class="row"><b>'+esc(o.plate||'без номера')+' · '+esc(o.model)+'</b><span class="pill s-'+o.status+'">'+ST[o.status]+'</span></div><div>'+esc(c.name)+' '+tel(c.phone)+'</div><div>'+esc(o.work)+'</div>'+buyHtml(o)+'<div class="row"><b>'+money(o.cost)+'</b><span class="mu">'+fd(o.date)+'</span></div>'
-  +'<div class="acts"><select onchange="setSt(\''+o.id+'\',this.value)">'+Object.entries(ST).map(function(x){return '<option value="'+x[0]+'"'+(x[0]===o.status?' selected':'')+'>'+x[1]+'</option>'}).join('')+'</select><button onclick="orderForm(\''+o.id+'\')">Изменить</button><button onclick="delOrder(\''+o.id+'\')">Удалить</button></div></div>'}).join('');
+  +'<div class="acts"><select onchange="setSt(\''+o.id+'\',this.value)">'+Object.entries(ST).map(function(x){return '<option value="'+x[0]+'"'+(x[0]===o.status?' selected':'')+'>'+x[1]+'</option>'}).join('')+'</select><button onclick="trk(\''+o.id+'\')">Ссылка клиенту</button><button onclick="orderForm(\''+o.id+'\')">Изменить</button><button onclick="delOrder(\''+o.id+'\')">Удалить</button></div></div>'}).join('');
 }
 function vClients(){
  var a=D.clients.filter(function(c){return (c.name+' '+c.phone+' '+c.cars.map(function(x){return x.plate+' '+x.model}).join(' ')).toLowerCase().indexOf(q.toLowerCase())>-1}).sort(function(a,b){return a.name.localeCompare(b.name)});
@@ -125,7 +126,7 @@ function vRem(){
  return a.map(function(o){var c=cl(o.cid),late=o.remind<=td();
   return '<div class="card'+(late?' due':'')+'"><div class="row"><b>'+esc(c.name)+'</b><span class="'+(late?'':'mu')+'">'+fd(o.remind)+(late?' · пора':'')+'</span></div><div>'+tel(c.phone)+' · '+esc(o.plate)+' '+esc(o.model)+'</div><div class="mu">'+esc(o.rtext||'Напомнить про обслуживание')+'</div><div class="acts"><button onclick="cpTxt(\''+o.id+'\')">Копировать текст</button><button onclick="remDone(\''+o.id+'\')">Готово</button></div></div>'}).join('');
 }
-function setSt(id,v){D.orders.find(function(o){return o.id===id}).status=v;save();render()}
+function setSt(id,v){D.orders.find(function(o){return o.id===id}).status=v;save();render();toast('Статус изменён. Клиенту можно отправить новую ссылку')}
 function delOrder(id){if(confirm('Удалить заказ?')){D.orders=D.orders.filter(function(o){return o.id!==id});save();render()}}
 function remDone(id){var o=D.orders.find(function(o){return o.id===id});o.remind='';o.rtext='';save();render()}
 function cpTxt(id){var o=D.orders.find(function(o){return o.id===id}),c=cl(o.cid);var t='Здравствуйте, '+c.name+'! Это автосервис PRC63. '+(o.rtext||'Напоминаем про обслуживание вашего автомобиля')+' ('+o.model+'). Запишем вас?';try{navigator.clipboard.writeText(t)}catch(e){prompt('Скопируйте текст:',t)}}
@@ -208,6 +209,14 @@ function vBuy(){
  rows.forEach(function(o){o.buy.forEach(function(x){if(!x.d)sum+=+x.p||0})});
  if(!rows.length)return '<div class="empty"><div class="wr">🔧</div><br>Покупать пока нечего. Добавьте запчасти в заказе.</div>';
  return '<div class="card"><b>Купить на сумму: '+money(sum)+'</b><span class="mu">Отметьте галочкой, когда купили.</span></div>'+rows.map(function(o){return '<div class="card"><div class="row"><b>'+esc(o.plate||'без номера')+' · '+esc(o.model)+'</b><span class="mu">'+esc(cl(o.cid).name)+'</span></div>'+buyHtml(o)+'</div>'}).join('');
+}
+function trk(id){
+ var o=D.orders.find(function(x){return x.id===id}),c=cl(o.cid);
+ var p={m:o.model,p:o.plate,s:o.status,u:td(),w:o.work,n:(c.name||'').split(' ')[0]};
+ var by=new TextEncoder().encode(JSON.stringify(p)),b='';by.forEach(function(x){b+=String.fromCharCode(x)});
+ b=btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+ var t='Здравствуйте! Следить за ремонтом вашего автомобиля можно здесь: '+new URL('track.html',location.href).href+'#'+b;
+ try{navigator.clipboard.writeText(t).then(function(){toast('Ссылка скопирована')},function(){showTxt(t)})}catch(e){showTxt(t)}
 }
 render();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});

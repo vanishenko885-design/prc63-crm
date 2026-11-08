@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0a0710"><title>Статус ремонта · PRC63</title>
+<style>
+:root{--bg:#0a0710;--card:#140f1f;--line:#2a2040;--p:#8a2be2;--gold:#d4a24c;--tx:#f3eefb;--mu:#a99cc2;color-scheme:dark;box-sizing:border-box;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a0710}}
+:root[data-theme="dark"]{--bg:#0a0710}
+*{box-sizing:border-box;margin:0}body{background:var(--bg);color:var(--tx);font:16px/1.5 "Segoe UI",Roboto,Arial,sans-serif;min-height:100vh}
+.w{max-width:520px;margin:0 auto;padding:20px 16px 40px}
+.lg{font-weight:800;font-style:italic;font-size:28px;text-align:center;background:linear-gradient(90deg,#a855f7,#6d28d9);-webkit-background-clip:text;background-clip:text;color:transparent;margin:6px 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:14px}
+h1{font-size:20px}.mu{color:var(--mu);font-size:14px}.pl{display:inline-block;margin-top:6px;padding:3px 12px;border:1px solid var(--gold);color:var(--gold);border-radius:8px;font-weight:700;letter-spacing:1px}
+.st{list-style:none;padding:0;margin-top:8px}.st li{position:relative;padding:0 0 22px 40px;color:var(--mu)}
+.st li::before{content:"";position:absolute;left:11px;top:26px;bottom:0;width:2px;background:var(--line)}.st li:last-child::before{display:none}
+.st i{position:absolute;left:0;top:0;width:24px;height:24px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-style:normal;font-size:13px;background:var(--bg)}
+.st .ok{color:var(--tx)}.st .ok i{background:var(--gold);border-color:var(--gold);color:#1a1205}.st .ok::before{background:var(--gold)}
+.st .now{color:var(--tx);font-weight:700}.st .now i{border-color:#a855f7;background:#a855f7;animation:pl 1.8s infinite}
+@keyframes pl{0%{box-shadow:0 0 0 0 rgba(168,85,247,.7)}70%,100%{box-shadow:0 0 0 12px rgba(168,85,247,0)}}
+.fin{color:#86efac;font-weight:700;margin-top:10px}
+.bt{display:block;text-align:center;padding:13px;border-radius:12px;text-decoration:none;color:#fff;font-weight:600;margin-top:10px;background:linear-gradient(135deg,#8a2be2,#5b21b6)}.bt.o{background:none;border:1px solid var(--p)}
+@media(prefers-reduced-motion:reduce){.st .now i{animation:none}}
+</style></head><body><div class="w"><div class="lg">PRC63</div><div id="app"></div></div>
+<script>
+var S=[['new','Автомобиль принят'],['diag','Проводится диагностика'],['parts','Ожидание запчастей'],['work','Ремонт выполняется'],['ready','Автомобиль готов']];
+var app=document.getElementById('app');
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+try{
+ var h=location.hash.slice(1).replace(/-/g,'+').replace(/_/g,'/');while(h.length%4)h+='=';
+ var bin=atob(h),by=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)by[i]=bin.charCodeAt(i);
+ var D=JSON.parse(new TextDecoder().decode(by));
+ var idx=D.s==='done'?5:S.findIndex(function(x){return x[0]===D.s});if(idx<0)throw 0;
+ var c1=el('div','card');c1.appendChild(el('h1',0,(D.n?D.n+', ваш автомобиль':'Ваш автомобиль')));
+ c1.appendChild(el('div','mu',D.m||''));if(D.p)c1.appendChild(el('span','pl',D.p));if(D.w)c1.appendChild(el('div','mu',D.w));
+ app.appendChild(c1);
+ var c2=el('div','card'),ul=el('ul','st');
+ S.forEach(function(x,i){var li=el('li',i<idx?'ok':i===idx?'now':'');li.appendChild(el('i',0,i<idx?'✓':''));li.appendChild(document.createTextNode(x[1]));ul.appendChild(li)});
+ c2.appendChild(ul);
+ if(D.s==='done')c2.appendChild(el('div','fin','Автомобиль выдан. Спасибо, что выбрали PRC63!'));
+ if(D.s==='ready')c2.appendChild(el('div','fin','Можно забирать автомобиль.'));
+ c2.appendChild(el('div','mu','Статус на '+(D.u||'').split('-').reverse().join('.')+'. Чтобы узнать актуальный, позвоните нам.'));
+ app.appendChild(c2);
+}catch(e){var c=el('div','card');c.appendChild(el('h1',0,'Ссылка недействительна'));c.appendChild(el('div','mu','Попросите мастера отправить ссылку ещё раз.'));app.appendChild(c)}
+var a=el('a','bt','Позвонить +7 987 917 10 95');a.href='tel:+79879171095';app.appendChild(a);
+var b=el('a','bt o','Написать в Telegram');b.href='https://t.me/PRC_63';app.appendChild(b);
+</script></body></html>
